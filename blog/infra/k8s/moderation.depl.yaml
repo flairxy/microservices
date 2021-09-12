@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation #we're telling the deployment to find the pods with label app: moderation
+  template: #this sets the template.
+    metadata:
+      labels:
+        app: moderation #For any pod the deployment is going to create it should have the label of app: moderation
+    spec: #This defines the specifications/configuration of the pod we want to create
+      containers:
+        - name: moderation
+          image: flairxy/moderation #auto sets to the latest version
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderation-srv
+spec:
+  selector:
+    app: moderation
+  ports:
+    - name: moderation
+      protocol: TCP
+      port: 4003
+      targetPort: 4003

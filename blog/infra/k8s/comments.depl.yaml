@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments #we're telling the deployment to find the pods with label app: comments
+  template: #this sets the template.
+    metadata:
+      labels:
+        app: comments #For any pod the deployment is going to create it should have the label of app: comments
+    spec: #This defines the specifications/configuration of the pod we want to create
+      containers:
+        - name: comments
+          image: flairxy/comments #auto sets to the latest version
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+spec:
+  selector:
+    app: comments
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4001
+      targetPort: 4001

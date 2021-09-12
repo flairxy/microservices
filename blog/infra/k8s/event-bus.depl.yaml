@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus #we're telling the deployment to find the pods with label app: event-bus
+  template: #this sets the template.
+    metadata:
+      labels:
+        app: event-bus #For any pod the deployment is going to create it should have the label of app: event-bus
+    spec: #This defines the specifications/configuration of the pod we want to create
+      containers:
+        - name: event-bus
+          image: flairxy/event-bus #auto sets to the latest version
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+spec:
+  selector:
+    app: event-bus
+  ports:
+    - name: event-bus
+      protocol: TCP
+      port: 4005
+      targetPort: 4005
