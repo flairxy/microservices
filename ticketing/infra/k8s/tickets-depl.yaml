@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth #we're telling the deployment to find the pods with label app: auth
+      app: tickets #we're telling the deployment to find the pods with label app: tickets
   template: #this sets the template.
     metadata:
       labels:
-        app: auth #For any pod the deployment is going to create it should have the label of app: auth
+        app: tickets #For any pod the deployment is going to create it should have the label of app: tickets
     spec: #This defines the specifications/configuration of the pod we want to create
       containers:
-        - name: auth
-          image: flairxy/auth #auto sets to the latest version
+        - name: tickets
+          image: flairxy/tickets #auto sets to the latest version
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017/auth' #here we just saved the value directly.
+              value: 'mongodb://tickets-mongo-srv:27017/tickets' #here we just saved the value directly.
               #Howerver, if our data is security sensitive then we should use the method below which involves using
               #a security key
             - name: JWT_KEY
@@ -30,12 +30,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000
       targetPort: 3000
